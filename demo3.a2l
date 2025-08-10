@@ -1,0 +1,49 @@
+/begin ASAP2_VERSION 1 70
+/end   ASAP2_VERSION
+
+/begin PROJECT DEMO "Demo project"
+  /begin MODULE DEMO_ECU "Demo ECU"
+
+    /begin MOD_COMMON "Common"
+      BYTE_ORDER MSB_LAST
+    /end MOD_COMMON
+
+    /begin COMPU_METHOD CM_RPM "Engine speed compu" RAT_FUNC "rpm"
+      COEFFS 0 1 0 0 0 0
+    /end COMPU_METHOD
+
+    /begin COMPU_METHOD CM_PERCENT "Percent compu" RAT_FUNC "%"
+      COEFFS 0 1 0 0 0 0
+    /end COMPU_METHOD
+
+    /begin RECORD_LAYOUT RL_WORD
+      FNC_VALUES 1 UWORD ROW_DIR
+    /end RECORD_LAYOUT
+
+    /begin CHARACTERISTIC APP_ENG_IDLE_SPEED "Idle speed target" VALUE 0x00001000 RL_WORD 0 CM_RPM 0 8000
+      ECU_ADDRESS 0x00001000
+      SYMBOL_LINK "APP_ENG_IDLE_SPEED" "idle_speed"
+      ANNOTATION "Type:Characteristic"
+    /end CHARACTERISTIC
+
+    /begin CHARACTERISTIC APP_ENG_TPS_KP "Throttle P gain" VALUE 0x00001010 RL_WORD 0 CM_PERCENT 0 100
+      ECU_ADDRESS 0x00001010
+      SYMBOL_LINK "APP_ENG_TPS_KP" "tps_kp"
+      ANNOTATION "Type:Characteristic"
+    /end CHARACTERISTIC
+
+    /begin MEASUREMENT APP_ENG_RPM "Engine speed" UWORD CM_RPM 0 8000
+      ECU_ADDRESS 0x00002000
+      SYMBOL_LINK "APP_ENG_RPM" "rpm_signal"
+      ANNOTATION "Type:Measurement"
+    /end MEASUREMENT
+
+    /begin MEASUREMENT APP_ENG_TPS_ARRAY "Throttle samples" UWORD CM_PERCENT 0 100
+      ECU_ADDRESS 0x00003000
+      ARRAY_SIZE 4
+      SYMBOL_LINK "APP_ENG_TPS_ARRAY" "tps_array"
+      ANNOTATION "Type:MeasurementArray"
+    /end MEASUREMENT
+
+  /end MODULE
+/end PROJECT

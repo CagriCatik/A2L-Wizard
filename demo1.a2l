@@ -1,0 +1,97 @@
+/begin ASAP2_VERSION 1 70
+/end   ASAP2_VERSION
+
+/begin PROJECT DEMO "Demo Project"
+  /begin MODULE DEMO_ECU "Demo ECU"
+
+    /begin MOD_COMMON "Common"
+      BYTE_ORDER MSB_LAST
+    /end MOD_COMMON
+
+    #--- Conversion methods ---
+    /begin COMPU_METHOD CM_RPM "Engine speed" RAT_FUNC "rpm"
+      COEFFS 0 1 0 0 0 0
+    /end COMPU_METHOD
+
+    /begin COMPU_METHOD CM_PCT "Percent" RAT_FUNC "%"
+      COEFFS 0 1 0 0 0 0
+    /end COMPU_METHOD
+
+    /begin COMPU_METHOD CM_TEMP "Temperature degC" RAT_FUNC "degC"
+      COEFFS 0 1 0 0 0 0
+    /end COMPU_METHOD
+
+    #--- Record layouts ---
+    /begin RECORD_LAYOUT RL_UWORD
+      FNC_VALUES 1 UWORD ROW_DIR
+    /end RECORD_LAYOUT
+
+    /begin RECORD_LAYOUT RL_UBYTE
+      FNC_VALUES 1 UBYTE ROW_DIR
+    /end RECORD_LAYOUT
+
+    #--- Characteristics (addresses in VALUE header) ---
+    /begin CHARACTERISTIC APP_ENG_IDLE_SPEED "Idle speed target" VALUE 0x00001000 RL_UWORD 0 CM_RPM 0 8000
+      SYMBOL_LINK "APP_ENG_IDLE_SPEED"
+      /begin ANNOTATION
+        /begin ANNOTATION_TEXT
+          "Type:Characteristic"
+        /end ANNOTATION_TEXT
+      /end ANNOTATION
+    /end CHARACTERISTIC
+
+    /begin CHARACTERISTIC APP_TRN_SHIFT_PCT "Shift threshold percent" VALUE 0x00001020 RL_UBYTE 0 CM_PCT 0 100
+      SYMBOL_LINK "APP_TRN_SHIFT_PCT"
+      /begin ANNOTATION
+        /begin ANNOTATION_TEXT
+          "Type:Characteristic"
+        /end ANNOTATION_TEXT
+      /end ANNOTATION
+    /end CHARACTERISTIC
+
+    #--- Scalar measurements (ECU_ADDRESS keyword) ---
+    /begin MEASUREMENT APP_ENG_RPM "Engine speed" UWORD CM_RPM 0 8000
+      ECU_ADDRESS 0x00002000
+      SYMBOL_LINK "APP_ENG_RPM"
+      /begin ANNOTATION
+        /begin ANNOTATION_TEXT
+          "Type:Measurement"
+        /end ANNOTATION_TEXT
+      /end ANNOTATION
+    /end MEASUREMENT
+
+    /begin MEASUREMENT APP_TRN_OIL_TEMP "Trans oil temperature" UWORD CM_TEMP -40 215
+      ECU_ADDRESS 0x00002020
+      SYMBOL_LINK "APP_TRN_OIL_TEMP"
+      /begin ANNOTATION
+        /begin ANNOTATION_TEXT
+          "Type:Measurement"
+        /end ANNOTATION_TEXT
+      /end ANNOTATION
+    /end MEASUREMENT
+
+    #--- Array measurements (ARRAY_SIZE) ---
+    /begin MEASUREMENT APP_ENG_TPS_ARRAY "Throttle samples" UBYTE CM_PCT 0 100
+      ECU_ADDRESS 0x00003000
+      ARRAY_SIZE 4
+      SYMBOL_LINK "APP_ENG_TPS_ARRAY"
+      /begin ANNOTATION
+        /begin ANNOTATION_TEXT
+          "Type:MeasurementArray"
+        /end ANNOTATION_TEXT
+      /end ANNOTATION
+    /end MEASUREMENT
+
+    /begin MEASUREMENT APP_TRN_GEAR_ARRAY "Detected gear history" UBYTE CM_PCT 0 10
+      ECU_ADDRESS 0x00003040
+      ARRAY_SIZE 8
+      SYMBOL_LINK "APP_TRN_GEAR_ARRAY"
+      /begin ANNOTATION
+        /begin ANNOTATION_TEXT
+          "Type:MeasurementArray"
+        /end ANNOTATION_TEXT
+      /end ANNOTATION
+    /end MEASUREMENT
+
+  /end MODULE
+/end PROJECT
